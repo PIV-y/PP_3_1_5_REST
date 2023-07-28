@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+  <h1>Users List</h1>
+  <table border="1">
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Last Name</th>
+      <th>Age</th>
+    </tr>
+    <tr th:each="user, user:${user}">
+      <td th:utext="${user.current.getId()}">ID</td>
+      <td th:utext="${user.current.getName()}">Name</td>
+      <td th:utext="${user.current.getLastName()}">Last Name</td>
+      <td th:utext="${user.current.getAge()}">Age</td>
+    </tr>
+  </table>
+  <br>
+
+  <input type="button" value="Back to menu"
+         onclick="window.location.href = '/'"/>
+  <br><br>
+
+  <input type="button" value="Add user"
+         onclick="window.location.href = '/user_info'"/>
+
+  <br><br>
+  <input type="button" value="Clean Table"
+         onclick="window.location.href = '/clean_table'"/>
+
+  <br><br>
+  <form th:method="POST" th:action="@{/{id}(id=${user.getId()})/update}">
+    <label for="idUPd">Update by ID:</label>
+    <input type="text" name="id" id="idUPd"/>
+    <br><br>
+    <input type="submit" value="Update">
+  </form>
+
+  <br><br>
+  <form th:method="DELETE" th:action="@{/{id}(id=${user.getId()})/delete}">
+    <label for="id">Delete by ID:</label>
+    <input type="text" name="id" id="id"/>
+    <br><br>
+    <input type="submit" value="Delete">
+  </form>
+
+</body>
+</html>
