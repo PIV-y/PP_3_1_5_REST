@@ -47,18 +47,13 @@ public class AdminController {
     @PostMapping ("/users/{id}/edit")
     public String editUser(Model model, @RequestParam("id") int id) {
         model.addAttribute("user", userService.getUserById(id));
-        System.out.println(model.toString());
         return "edit";
     }
 
 // Обновление юзера в БД по введенным данным
     @PatchMapping ("/users/{id}")
     public String update (@ModelAttribute("user") User user, @PathVariable("id") int id) {
-        System.out.println("Обновленный юзер пришел: " + user.toString());
-        System.out.println("id пришел в контроллер: " + id);
         userService.changeByID(user, id);
-    //    userService.changeByID(user);
-        System.out.println("юзер ушел в БД");
         return "redirect:/users";
     }
 

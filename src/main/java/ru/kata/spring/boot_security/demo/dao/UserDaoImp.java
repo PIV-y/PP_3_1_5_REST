@@ -54,8 +54,6 @@ public class UserDaoImp implements UserDao {
                 .setParameter("lastname", user.getLastName())
                 .setParameter("age", user.getAge())
                 .executeUpdate();
-        System.out.println("пришел в DAO: " + user.toString());
-        System.out.println("Получили из БД: " + getUserById(user.getId()).toString());
     }
 
     @Override
