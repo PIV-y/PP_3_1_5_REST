@@ -42,15 +42,14 @@ public class UserDaoImp implements UserDao {
     @Transactional
     public List<User> getAllUsers() {
         List<User> users = entityManager.createQuery("from User", User.class).getResultList();
-        System.out.println("List после запроса: " + users.toString());
         return users;
     }
 
     @Override
     @Transactional
-    public void changeByID(User user) {
+    public void changeByID(User user, long id) {
         entityManager.createQuery(HQL_CHANGE_USER_BY_ID)
-                .setParameter("id", user.getId())
+                .setParameter("id", id)
                 .setParameter("name", user.getName())
                 .setParameter("lastname", user.getLastName())
                 .setParameter("age", user.getAge())
