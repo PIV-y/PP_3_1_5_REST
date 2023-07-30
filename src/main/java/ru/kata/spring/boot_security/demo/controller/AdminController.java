@@ -7,15 +7,16 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Controller
-public class UsersController {
+@RequestMapping("/")
+public class AdminController {
     private UserService userService;
 
-    public UsersController(UserService userService) {
+    public AdminController(UserService userService) {
         this.userService = userService;
     }
 
 // Стартовая страница
-    @GetMapping()
+    @GetMapping("/")
     public String printStart (Model model) {
         model.addAttribute("messages", "HEllO");
         return "start";
