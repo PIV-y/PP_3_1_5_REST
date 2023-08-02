@@ -15,6 +15,9 @@
     <label for="Age">Enter age:</label>
     <input type="text" th:field="*{age}" id="Age"/>
     <br><br>
+    <label for="password">Enter password:</label>
+    <input type="text" th:field="*{password}" id="password"/>
+    <br><br>
 
     <input type="submit" value="Create">
     <br><br>
@@ -22,6 +25,10 @@
     <input type="button" value="Back to menu"
            onclick="window.location.href = '/'"/>
 </form>
+<br><br>
+
+<input type="button" value="LogOut"
+       onclick="window.location.href = '/logout'"/>
 
 </body>
 </html>

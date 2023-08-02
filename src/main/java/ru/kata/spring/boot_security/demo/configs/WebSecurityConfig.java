@@ -10,7 +10,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -24,27 +27,63 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                //Этот метод начинает конфигурирование правил авторизации для запросов.
+                // метод начинает конфигурирование правил авторизации для запросов.
                 .authorizeRequests()
-                //Эта строка указывает, что запросы к статическим ресурсам, определенным в PathRequest.toStaticResources().atCommonLocations(),
-                // разрешены для всех пользователей, включая неаутентифицированных (анонимных).
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .requestMatchers("/", "/index")
-                .hasRole("USER")
+                .requestMatchers("/users").authenticated()
+                .requestMatchers("/users").hasRole("ADMIN")
+
+   //             .requestMatchers("/admin/").hasRole("ADMIN")
                 .and()
-                .httpBasic(Customizer.withDefaults());
+    //            .formLogin(form ->form.successHandler(successUserHandler).permitAll())
+                .formLogin(Customizer.withDefaults())
+                .logout(logOutPage -> logOutPage.logoutSuccessUrl("/").permitAll());
         return http.build();
     }
-
+// In-Memory
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails user =
+//        UserDetails user =
+//                User.withDefaultPasswordEncoder()
+//                        .username("user")
+//                        .password("user")
+//                        .roles("USER")
+//                        .build();
+        UserDetails admin =
                 User.withDefaultPasswordEncoder()
-                        .username("user")
-                        .password("user")
-                        .roles("USER")
+                        .username("admin")
+                        .password("admin")
+                        .roles("USER","ADMIN")
                         .build();
-
-        return new InMemoryUserDetailsManager(user);
+        return new InMemoryUserDetailsManager(admin);
     }
+
+    //jdbc-authentication
+//    @Bean
+//    public JdbcUserDetailsManager users(DataSource dataSource) {
+//        UserDetails user =
+//            User.withDefaultPasswordEncoder()
+//                    .username("user")
+//                    .password("user")
+//                    .roles("USER")
+//                    .build();
+//        UserDetails admin =
+//            User.withDefaultPasswordEncoder()
+//                    .username("admin")
+//                    .password("admin")
+//                    .roles("USER","ADMIN")
+//                    .build();
+//
+//        JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
+//        if (users.userExists(user.getUsername())) {
+//            users.deleteUser(user.getUsername());
+//        }
+//        if (users.userExists(admin.getUsername())) {
+//            users.deleteUser(admin.getUsername());
+//        }
+//        users.createUser(user);
+//        users.createUser(admin);
+//
+//        return users;
+//    }
+
 }

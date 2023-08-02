@@ -7,9 +7,7 @@ import jakarta.validation.constraints.Size;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 public class User implements UserDetails {
@@ -25,17 +23,18 @@ public class User implements UserDetails {
     @Min(value = 14, message = "You cant register if you under 14")
     private int age;
     @OneToMany(mappedBy = "user")
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     private String password;
 
     public User() {
     }
 
-    public User(String name, String lastName, int age) {
+    public User(String name, String lastName, int age, String password) {
         this.name = name;
         this.lastName = lastName;
         this.age = age;
+        this.password = password;
     }
 
     public int getId() {
@@ -74,8 +73,11 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setRoles(Role role) {
+        this.roles.add(role);
+    }
+    public String forPrintRoles(List<Role> roles) {
+        return Arrays.asList(roles).toString();
     }
 
     @Override

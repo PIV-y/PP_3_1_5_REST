@@ -13,7 +13,8 @@ public class UserDaoImp implements UserDao {
     private static final String HQL_DROP_USERS_TABLE = "TRUNCATE TABLE User";
     private static final String HQL_GET_USER_BY_ID = "SELECT u FROM User u WHERE u.id = :id";
     private static final String HQL_REMOVE_USER_BY_ID = "DELETE FROM User u WHERE u.id = :id";
-    private static final String HQL_CHANGE_USER_BY_ID = "UPDATE User u SET u.name=:name, u.lastName=: lastname, u.age=:age WHERE u.id = :id";
+    private static final String HQL_CHANGE_USER_BY_ID = "UPDATE User u SET u.name=:name, " +
+            "u.lastName=: lastname, u.age=:age, u.password=:password, u.roles=:role WHERE u.id = :id";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -53,6 +54,8 @@ public class UserDaoImp implements UserDao {
                 .setParameter("name", user.getName())
                 .setParameter("lastname", user.getLastName())
                 .setParameter("age", user.getAge())
+                .setParameter("password", user.getPassword())
+                .setParameter("role", user.getRoles())
                 .executeUpdate();
     }
 

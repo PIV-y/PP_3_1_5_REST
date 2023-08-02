@@ -9,7 +9,6 @@
     <br>
     <form th:method="PATCH" th:action="@{/users/{id}(id=${user.getId()})}" th:object="${user}">
 
-        <input type="hidden" th:field="*{id}"/>
         <label for="name">Change name:</label>
         <input type="text" th:field="*{name}" id="name"/>
         <br><br>
@@ -19,10 +18,22 @@
         <label for="age">Change age:</label>
         <input type="text" th:field="*{age}" id="age"/>
         <br><br>
+        <label for="password">Change password:</label>
+        <input type="text" th:field="*{password}" id="password"/>
+        <br><br>
+        <label for="role">Change role:</label>
+        <input type="text" th:field="*{roles}" id="role"/>
+        <br><br>
+
         <input type="submit" value="Update">
         <br><br>
+
         <input type="button" value="Back to menu"
                onclick="window.location.href = '/'"/>
     </form>
+    <br><br>
+
+    <input type="button" value="LogOut"
+           onclick="window.location.href = '/logout'"/>
 </body>
 </html>
