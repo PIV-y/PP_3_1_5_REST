@@ -29,13 +29,15 @@ public class WebSecurityConfig {
         http
                 // метод начинает конфигурирование правил авторизации для запросов.
                 .authorizeRequests()
-                .requestMatchers("/users").authenticated()
-                .requestMatchers("/users").hasRole("ADMIN")
-
+                .requestMatchers("/").permitAll()
+                .requestMatchers("/admin").hasRole("ADMIN")
+//                .requestMatchers("/users").hasRole("ADMIN")
+                .requestMatchers("/users").hasAnyRole("USER", "ADMIN")
+                .anyRequest().authenticated()
    //             .requestMatchers("/admin/").hasRole("ADMIN")
                 .and()
-    //            .formLogin(form ->form.successHandler(successUserHandler).permitAll())
-                .formLogin(Customizer.withDefaults())
+                .formLogin().successHandler(successUserHandler).permitAll()
+                .and()
                 .logout(logOutPage -> logOutPage.logoutSuccessUrl("/").permitAll());
         return http.build();
     }
@@ -52,7 +54,7 @@ public class WebSecurityConfig {
                 User.withDefaultPasswordEncoder()
                         .username("admin")
                         .password("admin")
-                        .roles("USER","ADMIN")
+                        .roles("ADMIN")
                         .build();
         return new InMemoryUserDetailsManager(admin);
     }

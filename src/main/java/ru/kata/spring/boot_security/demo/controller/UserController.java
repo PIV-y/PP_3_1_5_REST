@@ -1,5 +1,7 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,38 +25,56 @@ public class UserController {
         return "start";
     }
 
-// Получить список Пользователей GET
-    @GetMapping("/users")
+/*// Получить список Пользователей GET
+    @GetMapping("/admin/users")
     public String printUserList (Model model) {
         model.addAttribute("user", userService.getAllUsers());
         return "users";
+    }*/
+    // Получить страницу пользователя
+    @GetMapping("/users")
+    public String printMyPage (Model model) {
+        //Объект Authentication в Spring Security содержит информацию об аутентификации пользователя.
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("Authentication: " + authentication);
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            if (user.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ADMIN"))) {
+                return "users";
+            } else {
+                return "my page";
+            }
+        }
+        System.out.println("no authntication!");
+        model.addAttribute("user", userService.getAllUsers());
+        return "my page";
     }
 
 // Добавить пользователя POST
-    @PostMapping("/users")
+    @PostMapping("/admin/users")
     public String saveUser (@ModelAttribute("user") User user) {
         user.setRoles(new Role("guest"));
         userService.saveUser(user);
         System.out.println(user.toString());
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
 // Переход на форму создания нового юзера GET
-    @GetMapping("/users/new")
+    @GetMapping("/admin/users/new")
     public String addNewUserInfo (Model model) {
         model.addAttribute("user", new User());
-    return "sign up";
+    return "add user";
     }
 
 // Получение юзера по ID для редактирования
-    @PostMapping ("/users/{id}/edit")
+    @PostMapping ("/admin/users/{id}/edit")
     public String editUser(Model model, @RequestParam("id") int id) {
         model.addAttribute("user", userService.getUserById(id));
         return "edit";
     }
 
 // Обновление юзера в БД по введенным данным
-    @PatchMapping ("/users/{id}")
+    @PatchMapping ("/admin/users/{id}")
     public String update (@ModelAttribute("user") User user,
                           @ModelAttribute("role") Role role, @PathVariable("id") int id) {
         userService.changeByID(user, id);
@@ -62,17 +82,17 @@ public class UserController {
     }
 
 // Очистить полностью таблицу юзеров
-    @DeleteMapping("/users")
+    @DeleteMapping("/admin/users")
     public String deleteAllUsers () {
         userService.dropData();
         return  "redirect:/users";
     }
 
 // Очистить таблицу юзеров по ID
-    @DeleteMapping("/users/{id}/delete")
+    @DeleteMapping("/admin/users/{id}/delete")
     public String deleteUserByID (@RequestParam("id") long id) {
         userService.removeUserById(id);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
 // Чтение профиля авторизированного пользователя
