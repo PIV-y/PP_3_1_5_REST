@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.*;
 
 @Entity
-public class User implements UserDetails {
+public class UserMan implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -22,19 +22,29 @@ public class User implements UserDetails {
     private String lastName;
     @Min(value = 14, message = "You cant register if you under 14")
     private int age;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Role> roles = new ArrayList<>();
+    @Transient
+    private String roleName;
 
     private String password;
 
-    public User() {
+    public UserMan() {
     }
 
-    public User(String name, String lastName, int age, String password) {
+    public UserMan(String name, String lastName, int age, String password) {
         this.name = name;
         this.lastName = lastName;
         this.age = age;
         this.password = password;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     public int getId() {
@@ -73,8 +83,11 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public void setRoles(Role role) {
-        this.roles.add(role);
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+        for (Role role : roles) {
+            role.setUser(this);
+        }
     }
     public String forPrintRoles(List<Role> roles) {
         return Arrays.asList(roles).toString();
@@ -122,8 +135,8 @@ public class User implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id && age == user.age && Objects.equals(name, user.name) && Objects.equals(lastName, user.lastName) && Objects.equals(roles, user.roles) && Objects.equals(password, user.password);
+        UserMan userMan = (UserMan) o;
+        return id == userMan.id && age == userMan.age && Objects.equals(name, userMan.name) && Objects.equals(lastName, userMan.lastName) && Objects.equals(roles, userMan.roles) && Objects.equals(password, userMan.password);
     }
 
     @Override

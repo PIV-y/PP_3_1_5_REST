@@ -28,15 +28,15 @@
   <br><br>
 
   <input type="button" value="Add user"
-         onclick="window.location.href = '/users/new'"/>
+         onclick="window.location.href = '/admin/users/new'"/>
 
   <br><br>
-  <form id="deleteForm" th:action="@{/users}" method="DELETE">
+  <form id="deleteForm" th:action="@{/admin/users}" method="DELETE">
     <input type="submit" value="Clean Table">
   </form>
 
   <br><br>
-  <form th:method="POST" th:action="@{/users/{id}(id=${user.getId()})/edit}">
+  <form th:method="POST" th:action="@{/admin/users/{id}(id=${user.getId()})/edit}">
     <label for="idUPd">Update by ID:</label>
     <input type="text" name="id" id="idUPd"/>
     <br><br>
@@ -44,7 +44,7 @@
   </form>
 
   <br><br>
-  <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})/delete}">
+  <form th:method="DELETE" th:action="@{/user/{id}(id=${user.getId()})/delete}">
     <label for="id">Delete by ID:</label>
     <input type="text" name="id" id="id"/>
     <br><br>

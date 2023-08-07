@@ -10,13 +10,21 @@ public class Role implements GrantedAuthority {
     private int id;
     private String roleName;
     @ManyToOne
-    private User user;
+    private UserMan user;
 
     public Role() {
     }
 
     public Role(String roleName) {
         this.roleName = roleName;
+    }
+
+    public UserMan getUser() {
+        return user;
+    }
+
+    public void setUser(UserMan user) {
+        this.user = user;
     }
 
     public int getId() {

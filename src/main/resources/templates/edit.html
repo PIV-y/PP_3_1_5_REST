@@ -2,12 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Edit user</title>
+    <title>Edit userMan</title>
 </head>
 <body>
-    <h1>Edit user</h1>
+    <h1>Edit userMan</h1>
     <br>
-    <form th:method="PATCH" th:action="@{/users/{id}(id=${user.getId()})}" th:object="${user}">
+    <form th:method="PATCH" th:action="@{admin/users/{id}(id=${user.getId()})}" th:object="${user}">
 
         <label for="name">Change name:</label>
         <input type="text" th:field="*{name}" id="name"/>

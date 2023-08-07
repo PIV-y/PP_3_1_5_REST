@@ -17,13 +17,17 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
                                         HttpServletResponse httpServletResponse,
                                         Authentication authentication) throws IOException {
+        System.out.println("SuccessUserHandler: User successfully authenticated.");
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
         // Проверка наличия роли "ROLE_USER" в списке ролей.
-        // Если у пользователя есть роль "ROLE_USER", его перенаправляют на страницу "/user".
-        // В противном случае, пользователь перенаправляется на главную страницу "/".
+        System.out.println(roles);
         if (roles.contains("ROLE_ADMIN")) {
-            httpServletResponse.sendRedirect("/users");
+            httpServletResponse.sendRedirect("/admin/users");
+        } else if (roles.contains("ROLE_USER")) {
+
+            httpServletResponse.sendRedirect("/users/{id}/read_profile");
         } else {
+            System.out.println("фильтры по ролям не прошли");
             httpServletResponse.sendRedirect("/");
         }
     }
