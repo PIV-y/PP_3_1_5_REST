@@ -19,9 +19,6 @@ public class Role implements GrantedAuthority {
         this.roleName = roleName;
     }
 
-    public UserMan getUser() {
-        return user;
-    }
 
     public void setUser(UserMan user) {
         this.user = user;

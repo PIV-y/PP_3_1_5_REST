@@ -29,10 +29,11 @@
 
   <input type="button" value="Add user"
          onclick="window.location.href = '/admin/users/new'"/>
-
   <br><br>
-  <form id="deleteForm" th:action="@{/admin/users}" method="DELETE">
-    <input type="submit" value="Clean Table">
+
+  <form id="deleteForm" th:action="@{/admin/users}" method="POST">
+    <input type="hidden" name="_method" value="DELETE"/>
+    <button type="submit">Clean Table</button>
   </form>
 
   <br><br>

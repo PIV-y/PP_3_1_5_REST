@@ -22,7 +22,7 @@ public class UserMan implements UserDetails {
     private String lastName;
     @Min(value = 14, message = "You cant register if you under 14")
     private int age;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Role> roles = new ArrayList<>();
     @Transient
     private String roleName;
@@ -45,6 +45,9 @@ public class UserMan implements UserDetails {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+    public void addRole (Role role) {
+        this.roles.add(role);
     }
 
     public int getId() {

@@ -7,7 +7,8 @@
 <body>
     <h1>Edit userMan</h1>
     <br>
-    <form th:method="PATCH" th:action="@{admin/users/{id}(id=${user.getId()})}" th:object="${user}">
+    <form th:method="PATCH" th:action="@{/admin/users/{id}(id=${user.getId()})}" th:object="${user}">
+<!--        <input type="hidden" name="_method" value="PATCH"/>-->
 
         <label for="name">Change name:</label>
         <input type="text" th:field="*{name}" id="name"/>
@@ -23,6 +24,9 @@
         <br><br>
         <label for="role">Change role:</label>
         <input type="text" th:field="*{roles}" id="role"/>
+        <br><br>
+        <label for="rolename">Add role:</label>
+        <input type="text" th:field="*{roleName}" id="rolename"/>
         <br><br>
 
         <input type="submit" value="Update">

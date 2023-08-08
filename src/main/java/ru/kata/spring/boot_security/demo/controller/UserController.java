@@ -10,7 +10,6 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.UserMan;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 @Controller
@@ -56,24 +55,6 @@ public class UserController {
         model.addAttribute("user", userService.getAllUsers());
         return "users";
     }
-    // Получить страницу пользователя
-//    @GetMapping("/users")
-//    public String printMyPage (Model model) {
-//        //Объект Authentication в Spring Security содержит информацию об аутентификации пользователя.
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        System.out.println("Authentication: " + authentication);
-//        if (authentication != null && authentication.getPrincipal() instanceof User) {
-//            User user = (User) authentication.getPrincipal();
-//            if (user.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ADMIN"))) {
-//                return "users";
-//            } else {
-//                return "my page";
-//            }
-//        }
-//        System.out.println("no authntication!");
-//        model.addAttribute("user", userService.getAllUsers());
-//        return "my page";
-//    }
 
 // Добавить пользователя POST
     @PostMapping("/admin/users")
@@ -109,9 +90,14 @@ public class UserController {
 // Обновление юзера в БД по введенным данным
     @PatchMapping ("/admin/users/{id}")
     public String update (@ModelAttribute("user") UserMan user,
-                          @ModelAttribute("role") Role role, @PathVariable("id") int id) {
+                          @PathVariable("id") int id,
+                          @RequestParam("roleName") String rolename) {
+        Role newRole = new Role(rolename);
+        if (!user.getRoles().contains(newRole)) {
+            user.addRole(newRole);
+        }
         userService.changeByID(user, id);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
 // Очистить полностью таблицу юзеров
