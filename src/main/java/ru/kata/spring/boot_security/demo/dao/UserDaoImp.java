@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.UserMan;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class UserDaoImp implements UserDao {
     private static final String HQL_GET_USER_BY_ID = "SELECT u FROM UserMan u WHERE u.id = :id";
     private static final String HQL_REMOVE_USER_BY_ID = "DELETE FROM UserMan u WHERE u.id = :id";
     private static final String HQL_CHANGE_USER_BY_ID = "UPDATE UserMan u SET u.name=:name, " +
-            "u.lastName=: lastname, u.age=:age, u.password=:password, u.roles=:role WHERE u.id = :id";
+            "u.lastName=: lastname, u.age=:age, u.password=:password, u.roles=:userRoles WHERE u.id = :id";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -56,14 +57,20 @@ public class UserDaoImp implements UserDao {
     @Override
     @Transactional
     public void changeByID(UserMan userMan, long id) {
+        System.out.println("юзер в дао: " + userMan.toString() + " параметр id " + id);
         entityManager.createQuery(HQL_CHANGE_USER_BY_ID)
                 .setParameter("id", id)
                 .setParameter("name", userMan.getName())
                 .setParameter("lastname", userMan.getLastName())
                 .setParameter("age", userMan.getAge())
                 .setParameter("password", userMan.getPassword())
-                .setParameter("role", userMan.getRoles())
+                .setParameter("userRoles", userMan.getRoles())
                 .executeUpdate();
+    }
+    @Override
+    @Transactional
+    public void saveRoleForUser (Role role) {
+        entityManager.persist(role);
     }
 
     @Override

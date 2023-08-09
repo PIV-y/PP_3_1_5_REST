@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.UserMan;
 
 import java.util.List;
@@ -50,5 +51,10 @@ public class UserServiceImp implements UserService {
     @Transactional
     public UserMan getUserById(long id) {
         return userDao.getUserById(id);
+    }
+
+    @Override
+    public void saveRoleForUser(Role role) {
+        userDao.saveRoleForUser(role);
     }
 }

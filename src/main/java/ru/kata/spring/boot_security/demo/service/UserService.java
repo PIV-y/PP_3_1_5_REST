@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
 
 
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.UserMan;
 
 import java.util.List;
@@ -18,4 +19,7 @@ public interface UserService {
     void changeByID(UserMan userMan, long id);
 
     UserMan getUserById(long id);
-}
+
+    public void saveRoleForUser (Role role);
+
+    }

@@ -11,6 +11,7 @@ import ru.kata.spring.boot_security.demo.model.UserMan;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Controller
 public class UserController {
@@ -91,14 +92,29 @@ public class UserController {
     @PatchMapping ("/admin/users/{id}")
     public String update (@ModelAttribute("user") UserMan user,
                           @PathVariable("id") int id,
-                          @RequestParam("roleName") String rolename) {
-        Role newRole = new Role(rolename);
-        if (!user.getRoles().contains(newRole)) {
-            user.addRole(newRole);
+                          @RequestParam("roleName") String roleName) {
+        if (roleName.equals("ROLE_ADMIN") || roleName.equals("ROLE_USER")) {
+            Role additionalRole = new Role(roleName);
+            additionalRole.setUser(user);
+            userService.saveRoleForUser(additionalRole);
+//            user.getRoles().add(additionalRole);
+            user.getRoles().addAll(userService.getUserById(id).getRoles());
+        } else {
+            user.getRoles().addAll(userService.getUserById(id).getRoles());
         }
+//
+//        System.out.println(additionalRole.toString());
+
+//        user.getRoles().addAll(userService.getUserById(id).getRoles());
+//        user.addRole(additionalRole);
+
+        System.out.println("до отправки в БД: " + user.toString());
         userService.changeByID(user, id);
         return "redirect:/admin/users";
     }
+//        List<Role> updatedListRoles = userService.getUserById(id).getRoles();
+//        updatedListRoles.addAll(user.getRoles());
+//        user.setRoles(updatedListRoles);
 
 // Очистить полностью таблицу юзеров
     @DeleteMapping("/admin/users")
