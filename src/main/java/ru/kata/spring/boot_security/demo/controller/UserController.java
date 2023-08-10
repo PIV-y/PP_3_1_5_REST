@@ -66,7 +66,6 @@ public class UserController {
         return "redirect:/admin/users";
     }
 
-
 // Переход на форму создания нового юзера GET
     @GetMapping("/admin/users/new")
     public String addNewUserInfo (Model model) {
@@ -93,28 +92,31 @@ public class UserController {
     public String update (@ModelAttribute("user") UserMan user,
                           @PathVariable("id") int id,
                           @RequestParam("roleName") String roleName) {
-        if (roleName.equals("ROLE_ADMIN") || roleName.equals("ROLE_USER")) {
-            Role additionalRole = new Role(roleName);
-            additionalRole.setUser(user);
-            userService.saveRoleForUser(additionalRole);
-//            user.getRoles().add(additionalRole);
-            user.getRoles().addAll(userService.getUserById(id).getRoles());
-        } else {
-            user.getRoles().addAll(userService.getUserById(id).getRoles());
+        UserMan existingUser = userService.getUserById(id);
+        Role additionalRole = new Role(roleName);
+        if (existingUser == null) {
+            System.out.println("нет такого юзера в базе");
+            return "redirect:/admin/users";
         }
-//
-//        System.out.println(additionalRole.toString());
 
-//        user.getRoles().addAll(userService.getUserById(id).getRoles());
-//        user.addRole(additionalRole);
+        if (roleName.equals("ROLE_ADMIN") || roleName.equals("ROLE_USER")) {
+            additionalRole.setUser(existingUser);
+            userService.saveRoleForUser(additionalRole);
+        } else {
+            System.out.println("нет такой роли");
+            return "redirect:/admin/users";
+        }
+        existingUser.setName(user.getName());
+        existingUser.setLastName(user.getLastName());
+        existingUser.setAge(user.getAge());
+        existingUser.setPassword(user.getPassword());
+        existingUser.getRoles().add(additionalRole);
 
         System.out.println("до отправки в БД: " + user.toString());
-        userService.changeByID(user, id);
+        userService.changeByID(existingUser, id);
+        System.out.println("пришел с дао в контроллер");
         return "redirect:/admin/users";
     }
-//        List<Role> updatedListRoles = userService.getUserById(id).getRoles();
-//        updatedListRoles.addAll(user.getRoles());
-//        user.setRoles(updatedListRoles);
 
 // Очистить полностью таблицу юзеров
     @DeleteMapping("/admin/users")
