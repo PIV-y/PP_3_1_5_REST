@@ -19,7 +19,8 @@ public interface UserService {
     void changeByID(UserMan userMan, long id);
 
     UserMan getUserById(long id);
+    public UserMan getUserByName(String userName);
 
     public void saveRoleForUser (Role role);
 
-    }
+}

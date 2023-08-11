@@ -16,6 +16,7 @@ public class UserDaoImp implements UserDao {
     private static final String HQL_DROP_USERS_TABLE = "DELETE FROM user_man";
     private static final String HQL_DROP_ROLES_TABLE = "DELETE FROM role";
     private static final String HQL_GET_USER_BY_ID = "SELECT u FROM UserMan u WHERE u.id = :id";
+    private static final String HQL_GET_USER_BY_NAME = "SELECT u FROM UserMan u WHERE u.name = :NAME";
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -70,4 +71,11 @@ public class UserDaoImp implements UserDao {
                 .setParameter("id", id)
                 .getSingleResult();
     }
+    @Override
+    public UserMan getUserByName(String userName) {
+        return (UserMan) entityManager.createQuery(HQL_GET_USER_BY_NAME)
+                .setParameter("NAME", userName)
+                .getSingleResult();
+    }
+
 }

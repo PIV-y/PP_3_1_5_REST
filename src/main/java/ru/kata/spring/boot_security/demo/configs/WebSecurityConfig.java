@@ -8,8 +8,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
+
+import javax.sql.DataSource;
 
 
 @Configuration
@@ -35,23 +38,45 @@ public class WebSecurityConfig {
                 .logout(logOutPage -> logOutPage.logoutSuccessUrl("/").permitAll());
         return http.build();
     }
+
+
+
+
 // In-Memory
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        UserDetails user =
+//                User.withDefaultPasswordEncoder()
+//                        .username("user")
+//                        .password("user")
+//                        .roles("USER")
+//                        .build();
+//        UserDetails admin =
+//                User.withDefaultPasswordEncoder()
+//                        .username("admin")
+//                        .password("admin")
+//                        .roles("ADMIN")
+//                        .build();
+//        return new InMemoryUserDetailsManager(admin, user);
+//    }
+
+// dbc auth
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user =
-                User.withDefaultPasswordEncoder()
-                        .username("user")
-                        .password("user")
-                        .roles("USER")
-                        .build();
+    public JdbcUserDetailsManager jdbcUserDetailsManager (DataSource dataSource) {
         UserDetails admin =
-                User.withDefaultPasswordEncoder()
-                        .username("admin")
-                        .password("admin")
-                        .roles("ADMIN")
-                        .build();
-        return new InMemoryUserDetailsManager(admin, user);
+            User.withDefaultPasswordEncoder()
+                    .username("admin")
+                    .password("admin")
+                    .roles("ADMIN")
+                    .build();
+        JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
+        if (users.userExists(admin.getUsername())) {
+            users.deleteUser(admin.getUsername());
+        }
+        users.createUser(admin);
+        return users;
     }
+
 
     @Bean
     public HiddenHttpMethodFilter hiddenHttpMethodFilter() {

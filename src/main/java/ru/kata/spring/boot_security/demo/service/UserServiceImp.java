@@ -34,6 +34,10 @@ public class UserServiceImp implements UserService {
     public void removeUserById(long id) {
         userDao.removeUserById(id);
     }
+    @Override
+    public UserMan getUserByName(String userName) {
+        return userDao.getUserByName(userName);
+    }
 
     @Override
     @Transactional

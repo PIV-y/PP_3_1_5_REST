@@ -22,5 +22,6 @@ public interface UserDao {
 
     public void saveRoleForUser (Role role);
 
+    public UserMan getUserByName(String userName);
 
     }
