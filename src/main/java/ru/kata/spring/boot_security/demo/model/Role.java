@@ -1,7 +1,10 @@
 package ru.kata.spring.boot_security.demo.model;
 
 import jakarta.persistence.*;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Repository;
 
 @Entity
 public class Role implements GrantedAuthority {
@@ -39,6 +42,7 @@ public class Role implements GrantedAuthority {
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
+
 
     @Override
     public String toString() {

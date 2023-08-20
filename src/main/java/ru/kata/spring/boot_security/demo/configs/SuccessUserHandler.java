@@ -1,5 +1,7 @@
 package ru.kata.spring.boot_security.demo.configs;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -15,8 +17,8 @@ import java.util.Set;
 
 @Component
 public class SuccessUserHandler implements AuthenticationSuccessHandler {
-    // Spring Security использует объект Authentication, пользователя авторизованной сессии.
     private UserService userService;
+
 
     public SuccessUserHandler(UserService userService) {
         this.userService = userService;
@@ -28,46 +30,24 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException {
         System.out.println("SuccessUserHandler: User successfully authenticated.");
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
-        // Проверка наличия роли "ROLE_USER" в списке ролей.
-        System.out.println(roles);
-        String username = authentication.getName();
-        String password = authentication.getCredentials().toString();
-        UserMan userMan = null;
-        try {
-            userMan = userService.getUserByName(username);
-            if (password.equals(userMan.getPassword()) && (roles.contains("ROLE_ADMIN"))) {
-                httpServletResponse.sendRedirect("/admin/users");
-            } else if (password.equals(userMan.getPassword()) && roles.contains("ROLE_USER")) {
 
-                httpServletResponse.sendRedirect("/users/{id}/read_profile");
+        String username = authentication.getName();
+        String password = (String) authentication.getCredentials();
+        System.out.println("usrName: " + username + "; psw: " + password + "; roles: " + roles );
+
+        try {
+            if (roles.contains("ROLE_ADMIN")) {
+                System.out.println("Role is ADMIN, Welcome");
+                httpServletResponse.sendRedirect("/admin/users");
+            } else if (roles.contains("ROLE_USER")) {
+                System.out.println("Role is USER, Welcome");
+                httpServletResponse.sendRedirect("/users/read_profile");
             } else {
                 System.out.println("фильтры по ролям не прошли");
                 httpServletResponse.sendRedirect("/");
             }
-
-
-
-
-
-
-
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             System.out.println("Не правильное имя или нет такого пользователя");
         }
-
-        if (password.equals(userMan.getPassword()))
-
-
-        if (roles.contains("ROLE_ADMIN")) {
-            httpServletResponse.sendRedirect("/admin/users");
-        } else if (roles.contains("ROLE_USER")) {
-
-            httpServletResponse.sendRedirect("/users/{id}/read_profile");
-        } else {
-            System.out.println("фильтры по ролям не прошли");
-            httpServletResponse.sendRedirect("/");
-        }
     }
-
-
 }

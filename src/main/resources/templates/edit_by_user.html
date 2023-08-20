@@ -16,7 +16,8 @@
 <body>
 <h1>Edit userMan</h1>
 <br>
-<form th:method="PATCH" th:action="@{user/{id}(id=${user.getId()})}" th:object="${user}">
+<form th:method="PATCH" th:action="@{/users}" th:object="${user}">
+<!--  <input type="hidden" name="_method" value="PATCH"/>-->
 
   <label for="name">Change name:</label>
   <input type="text" th:field="*{name}" id="name"/>

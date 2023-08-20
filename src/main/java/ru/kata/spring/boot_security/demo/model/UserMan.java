@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -96,6 +97,7 @@ public class UserMan implements UserDetails {
         return Arrays.asList(roles).toString();
     }
 
+    @Transactional
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;

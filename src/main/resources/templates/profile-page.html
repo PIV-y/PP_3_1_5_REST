@@ -13,6 +13,7 @@
 
     </tr>
     <tr th:each="user, user:${user}">
+        <td th:utext="${user.current.getId}">Name</td>
         <td th:utext="${user.current.getName()}">Name</td>
         <td th:utext="${user.current.getLastName()}">Last Name</td>
         <td th:utext="${user.current.getAge()}">Age</td>
@@ -26,21 +27,12 @@
        onclick="window.location.href = '/'"/>
 <br><br>
 
+<input type="button" value="Update My Profile"
+       onclick="window.location.href = '/users/edit'"/>
 <br><br>
-<form th:method="POST" th:action="@{/users/{id}(id=${user.getId()})/edit}">
-    <label for="idUPd">Update My Profile:</label>
-    <input type="text" name="id" id="idUPd"/>
-    <br><br>
-    <input type="submit" value="Update">
-</form>
 
-<br><br>
-<form th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})/delete}">
-    <label for="id">Delete My Profile:</label>
-    <input type="text" name="id" id="id"/>
-    <br><br>
-    <input type="submit" value="Delete">
-</form>
+<input type="button" value="Delete My Profile"
+       onclick="window.location.href = '/users/delete'"/>
 <br><br>
 
 <input type="button" value="LogOut"

@@ -16,7 +16,7 @@ public class UserDaoImp implements UserDao {
     private static final String HQL_DROP_USERS_TABLE = "DELETE FROM user_man";
     private static final String HQL_DROP_ROLES_TABLE = "DELETE FROM role";
     private static final String HQL_GET_USER_BY_ID = "SELECT u FROM UserMan u WHERE u.id = :id";
-    private static final String HQL_GET_USER_BY_NAME = "SELECT u FROM UserMan u WHERE u.name = :NAME";
+    private static final String HQL_GET_USER_BY_NAME = "SELECT u FROM UserMan u WHERE u.name = :name";
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -33,9 +33,10 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
+    @Transactional
     public void saveUser(UserMan userMan) {
         entityManager.persist(userMan);
-        entityManager.close();
+//        entityManager.close();
     }
 
     @Override
@@ -72,10 +73,17 @@ public class UserDaoImp implements UserDao {
                 .getSingleResult();
     }
     @Override
+    @Transactional
     public UserMan getUserByName(String userName) {
         return (UserMan) entityManager.createQuery(HQL_GET_USER_BY_NAME)
-                .setParameter("NAME", userName)
+                .setParameter("name", userName)
                 .getSingleResult();
     }
-
+//    @Override
+//    public UserMan getUserByName(String userName) {
+//        return entityManager.createQuery(HQL_GET_USER_BY_NAME, UserMan.class)
+//                .setParameter("NAME", userName)
+//                .setHint("javax.persistence.fetchgraph", entityManager.getEntityGraph("user-with-roles"))
+//                .getSingleResult();
+//    }
 }
