@@ -52,8 +52,10 @@ public class UserController {
 
 // Получить список Пользователей GET
     @GetMapping("/admin/users")
-    public String printUserList (Model model) {
-        model.addAttribute("user", userService.getAllUsers());
+    public String printUserList (Model model, Authentication authentication) {
+        model.addAttribute("userOfSession", (UserMan) authentication.getPrincipal());
+        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("userNew", new UserMan());
         return "users";
     }
 

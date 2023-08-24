@@ -15,62 +15,256 @@
 
 </head>
 <body>
-  <h1>Users List</h1>
-  <table border="1">
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Last Name</th>
-      <th>Age</th>
-      <th>Password</th>
-      <th>Role</th>
+  <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+    <h2 style="font-family: 'Exo 2', sans-serif; color: orange">Hello <span th:text="${userOfSession.name}">
+    </span>! with roles: <span th:each="role, iterStat : ${userOfSession.roles}">
+      <span th:text="${role.getRoleName()}"></span> <span th:if="${!iterStat.last}">,</span>
+    </span>
+    </h2>
+  </nav>
 
-    </tr>
-    <tr th:each="user, user:${user}">
-      <td th:utext="${user.current.getId()}">ID</td>
-      <td th:utext="${user.current.getName()}">Name</td>
-      <td th:utext="${user.current.getLastName()}">Last Name</td>
-      <td th:utext="${user.current.getAge()}">Age</td>
-      <td th:utext="${user.current.getPassword()}">Password</td>
-      <td>
-        <span th:each="role : ${user.current.roles}" th:text="${role.roleName}"></span>
-      </td>
-    </tr>
-  </table>
-  <br>
+  <h2>Admin panel</h2>
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link" aria-current="page" href="#usersTable">Users Table</a>
+    </li>
 
-  <input type="button" value="Back to menu"
-         onclick="window.location.href = '/'"/>
-  <br><br>
+    <li class="nav-item">
+      <a class="nav-link" aria-current="page" href="#addUser">Add new User</a>
+    </li>
+  </ul>
 
-  <input type="button" value="Add user"
-         onclick="window.location.href = '/admin/users/new'"/>
-  <br><br>
+  <div class="tab-content">
+    <div id="usersTable" class="tab-panel">
+      <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+        <p style="font-family: 'Exo 2', sans-serif; color: orange">All users</p>
+      </nav>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Last Name</th>
+            <th>Age</th>
+            <th>Password</th>
+            <th>Role</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
 
-  <form id="deleteForm" th:action="@{/admin/users}" method="POST">
-    <input type="hidden" name="_method" value="DELETE"/>
-    <button type="submit">Clean Table</button>
-  </form>
+        <tbody>
+          <tr th:each="user, user:${users}">
+            <td th:utext="${user.current.getId()}">ID</td>
+            <td th:utext="${user.current.getName()}">Name</td>
+            <td th:utext="${user.current.getLastName()}">Last Name</td>
+            <td th:utext="${user.current.getAge()}">Age</td>
+            <td th:utext="${user.current.getPassword()}">Password</td>
+            <td>
+              <span th:each="role, iterStat : ${user.current.roles}">
+              <span th:text="${role.roleName}"></span>
+              <span th:if="${!iterStat.last}">, </span>
+              </span>
+            </td>
 
-  <br><br>
-  <form th:method="POST" th:action="@{/admin/users/{id}(id=${user.getId()})/edit}">
-    <label for="idUPd">Update by ID:</label>
-    <input type="text" name="id" id="idUPd"/>
-    <br><br>
-    <input type="submit" value="Update">
-  </form>
+            <td>
+<!--              <button type="button" class="btn btn-Edit">Edit</button>-->
+              <button type="button" class="btn btn-Edit" data-bs-toggle="modal" th:data-bs-target="'#editModal-' + ${user.current.getId()}">Edit</button>
+              <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
 
-  <br><br>
-  <form th:method="DELETE" th:action="@{/admin/users/{id}(id=${user.getId()})/delete}">
-    <label for="id">Delete by ID:</label>
-    <input type="text" name="id" id="id"/>
-    <br><br>
-    <input type="submit" value="Delete">
-  </form>
-  <br><br>
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
 
-  <input type="button" value="LogOut"
-         onclick="window.location.href = '/logout'"/>
+                      <div class="modal fade" id="editModal-${user.current.getId()}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="editModalLabel">Edit User</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <form th:method="PATCH" th:action="@{/admin/users/{id}(id=${user.current.getId()})}" th:object="${user}">
+                                <label for="nameChngUser">Change name:</label>
+                                <input type="text" th:field="*{name}" id="nameChngUser"/>
+                                <br><br>
+                                <label for="lastnameChngUser">Change lastname:</label>
+                                <input type="text" th:field="*{lastName}" id="lastnameChngUser"/>
+                                <br><br>
+                                <label for="ageChngUser">Change age:</label>
+                                <input type="text" th:field="*{age}" id="ageChngUser"/>
+                                <br><br>
+                                <label for="passwordChngUser">Change password:</label>
+                                <input type="text" th:field="*{password}" id="passwordChngUser"/>
+                                <br><br>
+                                <label>Current role:</label>
+                                <span th:each="role : ${user.getRoles()}" th:text="${role.roleName}"></span>
+                                <br><br>
+                                <label for="rolename">Add role:</label>
+                                <input type="text" th:field="*{roleName}" id="rolename"/>
+                                <br><br>
+
+                                <input type="submit" value="Update">
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+  <!--                    <div class="modal-body">-->
+  <!--                      <form th:method="PATCH" th:action="@{/admin/users/{id}(id=${user.current.getId()})}" th:object="${user}">-->
+
+  <!--                        <label for="nameChngUser">Change name:</label>-->
+  <!--                        <input type="text" th:field="*{name}" id="nameChngUser"/>-->
+  <!--                        <br><br>-->
+  <!--                        <label for="lastnameChngUser">Change lastname:</label>-->
+  <!--                        <input type="text" th:field="*{lastName}" id="lastnameChngUser"/>-->
+  <!--                        <br><br>-->
+  <!--                        <label for="ageChngUser">Change age:</label>-->
+  <!--                        <input type="text" th:field="*{age}" id="ageChngUser"/>-->
+  <!--                        <br><br>-->
+  <!--                        <label for="passwordChngUser">Change password:</label>-->
+  <!--                        <input type="text" th:field="*{password}" id="passwordChngUser"/>-->
+  <!--                        <br><br>-->
+  <!--                        <label>Current role:</label>-->
+  <!--                        <span th:each="role : ${user.getRoles()}" th:text="${role.roleName}"></span>-->
+  <!--                        <br><br>-->
+  <!--                        <label for="rolename">Add role:</label>-->
+  <!--                        <input type="text" th:field="*{roleName}" id="rolename"/>-->
+  <!--                        <br><br>-->
+
+  <!--                        <input type="submit" value="Update">-->
+  <!--                        <br><br>-->
+
+  <!--                        <input type="button" value="Back to menu"-->
+  <!--                               onclick="window.location.href = '/'"/>-->
+  <!--                      </form>                    -->
+  <!--                    </div>-->
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+            </td>
+
+            <td>
+              <button type="button" class="btn btn-Delete">Delete</button>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+
+
+    </div>
+
+    <div id="addUser" class="tab-panel">
+      <h2>Add new User</h2>
+        <form th:method="POST" th:action="@{/admin/users}" th:object="${userNew}">
+
+          <label for="name">Enter name:</label>
+          <input type="text" th:field="*{name}" id="name"/>
+          <br><br>
+          <label for="lastname">Enter lastname:</label>
+          <input type="text" th:field="*{lastName}" id="lastname"/>
+          <br><br>
+          <label for="Age">Enter age:</label>
+          <input type="text" th:field="*{age}" id="Age"/>
+          <br><br>
+          <label for="password">Enter password:</label>
+          <input type="text" th:field="*{password}" id="password"/>
+          <br><br>
+          <br><br>
+          <label for="role">Enter role:</label>
+          <input type="text" th:field="*{roleName}" id="role"/>
+          <br><br>
+
+          <input type="submit" value="Create">
+          <br><br>
+
+          <input type="button" value="Back to menu"
+                 onclick="window.location.href = '/'"/>
+        </form>
+    </div>
+
+  </div>
+
+<!--  <table border="1">-->
+<!--    <tr>-->
+<!--      <th>ID</th>-->
+<!--      <th>Name</th>-->
+<!--      <th>Last Name</th>-->
+<!--      <th>Age</th>-->
+<!--      <th>Password</th>-->
+<!--      <th>Role</th>-->
+
+<!--    </tr>-->
+<!--    <tr th:each="user, user:${user}">-->
+<!--      <td th:utext="${user.current.getId()}">ID</td>-->
+<!--      <td th:utext="${user.current.getName()}">Name</td>-->
+<!--      <td th:utext="${user.current.getLastName()}">Last Name</td>-->
+<!--      <td th:utext="${user.current.getAge()}">Age</td>-->
+<!--      <td th:utext="${user.current.getPassword()}">Password</td>-->
+<!--      <td>-->
+<!--        <span th:each="role : ${user.current.roles}" th:text="${role.roleName}"></span>-->
+<!--      </td>-->
+<!--    </tr>-->
+<!--  </table>-->
+<!--  <br>-->
+
+<!--  <input type="button" value="Back to menu"-->
+<!--         onclick="window.location.href = '/'"/>-->
+<!--  <br><br>-->
+
+<!--  <input type="button" value="Add user"-->
+<!--         onclick="window.location.href = '/admin/users/new'"/>-->
+<!--  <br><br>-->
+
+<!--  <form id="deleteForm" th:action="@{/admin/users}" method="POST">-->
+<!--    <input type="hidden" name="_method" value="DELETE"/>-->
+<!--    <button type="submit">Clean Table</button>-->
+<!--  </form>-->
+
+<!--  <br><br>-->
+<!--  <form th:method="POST" th:action="@{/admin/users/{id}(id=${user.getId()})/edit}">-->
+<!--    <label for="idUPd">Update by ID:</label>-->
+<!--    <input type="text" name="id" id="idUPd"/>-->
+<!--    <br><br>-->
+<!--    <input type="submit" value="Update">-->
+<!--  </form>-->
+
+<!--  <br><br>-->
+<!--  <form th:method="DELETE" th:action="@{/admin/users/{id}(id=${user.getId()})/delete}">-->
+<!--    <label for="id">Delete by ID:</label>-->
+<!--    <input type="text" name="id" id="id"/>-->
+<!--    <br><br>-->
+<!--    <input type="submit" value="Delete">-->
+<!--  </form>-->
+<!--  <br><br>-->
+
+<!--  <input type="button" value="LogOut"-->
+<!--         onclick="window.location.href = '/logout'"/>-->
+
 
 </body>
+
+  <style>
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel:target {
+      display: block;
+    }
+  </style>
+
 </html>
+
