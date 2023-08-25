@@ -9,12 +9,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;700&family=Zeyada&display=swap" rel="stylesheet">
-
   <!--    font-family: 'Exo 2', sans-serif;-->
   <!--    font-family: 'Zeyada', cursive;-->
 
 </head>
 <body>
+<!--User information above working place-->
   <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
     <h2 style="font-family: 'Exo 2', sans-serif; color: orange">Hello <span th:text="${userOfSession.name}">
     </span>! with roles: <span th:each="role, iterStat : ${userOfSession.roles}">
@@ -66,192 +66,49 @@
               <span th:if="${!iterStat.last}">, </span>
               </span>
             </td>
-
             <td>
-<!--              <button type="button" class="btn btn-Edit">Edit</button>-->
-              <button type="button" class="btn btn-Edit" data-bs-toggle="modal" th:data-bs-target="'#editModal-' + ${user.current.getId()}">Edit</button>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'exampleModal-' + ${user.current.getId()}">
+                Edit
+              </button>
               <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-
-                      <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-
-                      <div class="modal fade" id="editModal-${user.current.getId()}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="editModalLabel">Edit User</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                              <form th:method="PATCH" th:action="@{/admin/users/{id}(id=${user.current.getId()})}" th:object="${user}">
-                                <label for="nameChngUser">Change name:</label>
-                                <input type="text" th:field="*{name}" id="nameChngUser"/>
-                                <br><br>
-                                <label for="lastnameChngUser">Change lastname:</label>
-                                <input type="text" th:field="*{lastName}" id="lastnameChngUser"/>
-                                <br><br>
-                                <label for="ageChngUser">Change age:</label>
-                                <input type="text" th:field="*{age}" id="ageChngUser"/>
-                                <br><br>
-                                <label for="passwordChngUser">Change password:</label>
-                                <input type="text" th:field="*{password}" id="passwordChngUser"/>
-                                <br><br>
-                                <label>Current role:</label>
-                                <span th:each="role : ${user.getRoles()}" th:text="${role.roleName}"></span>
-                                <br><br>
-                                <label for="rolename">Add role:</label>
-                                <input type="text" th:field="*{roleName}" id="rolename"/>
-                                <br><br>
-
-                                <input type="submit" value="Update">
-                              </form>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-  <!--                    <div class="modal-body">-->
-  <!--                      <form th:method="PATCH" th:action="@{/admin/users/{id}(id=${user.current.getId()})}" th:object="${user}">-->
-
-  <!--                        <label for="nameChngUser">Change name:</label>-->
-  <!--                        <input type="text" th:field="*{name}" id="nameChngUser"/>-->
-  <!--                        <br><br>-->
-  <!--                        <label for="lastnameChngUser">Change lastname:</label>-->
-  <!--                        <input type="text" th:field="*{lastName}" id="lastnameChngUser"/>-->
-  <!--                        <br><br>-->
-  <!--                        <label for="ageChngUser">Change age:</label>-->
-  <!--                        <input type="text" th:field="*{age}" id="ageChngUser"/>-->
-  <!--                        <br><br>-->
-  <!--                        <label for="passwordChngUser">Change password:</label>-->
-  <!--                        <input type="text" th:field="*{password}" id="passwordChngUser"/>-->
-  <!--                        <br><br>-->
-  <!--                        <label>Current role:</label>-->
-  <!--                        <span th:each="role : ${user.getRoles()}" th:text="${role.roleName}"></span>-->
-  <!--                        <br><br>-->
-  <!--                        <label for="rolename">Add role:</label>-->
-  <!--                        <input type="text" th:field="*{roleName}" id="rolename"/>-->
-  <!--                        <br><br>-->
-
-  <!--                        <input type="submit" value="Update">-->
-  <!--                        <br><br>-->
-
-  <!--                        <input type="button" value="Back to menu"-->
-  <!--                               onclick="window.location.href = '/'"/>-->
-  <!--                      </form>                    -->
-  <!--                    </div>-->
-
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                      </div>
-
+              <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <input type="text" id="myInput" autofocus>
+                      <!-- ... остальной контент модального окна ... -->
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
                   </div>
                 </div>
-
+              </div>
             </td>
-
             <td>
-              <button type="button" class="btn btn-Delete">Delete</button>
+              <button type="button" class="btn btn-danger">Delete</button>
             </td>
-
           </tr>
         </tbody>
       </table>
-
-
     </div>
-
-    <div id="addUser" class="tab-panel">
-      <h2>Add new User</h2>
-        <form th:method="POST" th:action="@{/admin/users}" th:object="${userNew}">
-
-          <label for="name">Enter name:</label>
-          <input type="text" th:field="*{name}" id="name"/>
-          <br><br>
-          <label for="lastname">Enter lastname:</label>
-          <input type="text" th:field="*{lastName}" id="lastname"/>
-          <br><br>
-          <label for="Age">Enter age:</label>
-          <input type="text" th:field="*{age}" id="Age"/>
-          <br><br>
-          <label for="password">Enter password:</label>
-          <input type="text" th:field="*{password}" id="password"/>
-          <br><br>
-          <br><br>
-          <label for="role">Enter role:</label>
-          <input type="text" th:field="*{roleName}" id="role"/>
-          <br><br>
-
-          <input type="submit" value="Create">
-          <br><br>
-
-          <input type="button" value="Back to menu"
-                 onclick="window.location.href = '/'"/>
-        </form>
-    </div>
-
   </div>
 
-<!--  <table border="1">-->
-<!--    <tr>-->
-<!--      <th>ID</th>-->
-<!--      <th>Name</th>-->
-<!--      <th>Last Name</th>-->
-<!--      <th>Age</th>-->
-<!--      <th>Password</th>-->
-<!--      <th>Role</th>-->
+<!-- Скрипт для фокусировки на инпуте при открытии модального окна -->
+<script>
+  const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+  editModal._element.addEventListener('shown.bs.modal', () => {
+    document.getElementById('myInput').focus();
+  });
+</script>
 
-<!--    </tr>-->
-<!--    <tr th:each="user, user:${user}">-->
-<!--      <td th:utext="${user.current.getId()}">ID</td>-->
-<!--      <td th:utext="${user.current.getName()}">Name</td>-->
-<!--      <td th:utext="${user.current.getLastName()}">Last Name</td>-->
-<!--      <td th:utext="${user.current.getAge()}">Age</td>-->
-<!--      <td th:utext="${user.current.getPassword()}">Password</td>-->
-<!--      <td>-->
-<!--        <span th:each="role : ${user.current.roles}" th:text="${role.roleName}"></span>-->
-<!--      </td>-->
-<!--    </tr>-->
-<!--  </table>-->
-<!--  <br>-->
-
-<!--  <input type="button" value="Back to menu"-->
-<!--         onclick="window.location.href = '/'"/>-->
-<!--  <br><br>-->
-
-<!--  <input type="button" value="Add user"-->
-<!--         onclick="window.location.href = '/admin/users/new'"/>-->
-<!--  <br><br>-->
-
-<!--  <form id="deleteForm" th:action="@{/admin/users}" method="POST">-->
-<!--    <input type="hidden" name="_method" value="DELETE"/>-->
-<!--    <button type="submit">Clean Table</button>-->
-<!--  </form>-->
-
-<!--  <br><br>-->
-<!--  <form th:method="POST" th:action="@{/admin/users/{id}(id=${user.getId()})/edit}">-->
-<!--    <label for="idUPd">Update by ID:</label>-->
-<!--    <input type="text" name="id" id="idUPd"/>-->
-<!--    <br><br>-->
-<!--    <input type="submit" value="Update">-->
-<!--  </form>-->
-
-<!--  <br><br>-->
-<!--  <form th:method="DELETE" th:action="@{/admin/users/{id}(id=${user.getId()})/delete}">-->
-<!--    <label for="id">Delete by ID:</label>-->
-<!--    <input type="text" name="id" id="id"/>-->
-<!--    <br><br>-->
-<!--    <input type="submit" value="Delete">-->
-<!--  </form>-->
-<!--  <br><br>-->
-
-<!--  <input type="button" value="LogOut"-->
-<!--         onclick="window.location.href = '/logout'"/>-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua9bmj2piVtId+txm5HNpUpU6qWR1l3K9/KBtVfoMf70Z+f2EIdQC1jw1" crossorigin="anonymous"></script>
 
 
 </body>
@@ -260,7 +117,6 @@
     .tab-panel {
       display: none;
     }
-
     .tab-panel:target {
       display: block;
     }
@@ -268,3 +124,31 @@
 
 </html>
 
+<!--<div id="addUser" class="tab-panel">-->
+<!--  <h2>Add new User</h2>-->
+<!--  <form th:method="POST" th:action="@{/admin/users}" th:object="${userNew}">-->
+
+<!--    <label for="name">Enter name:</label>-->
+<!--    <input type="text" th:field="*{name}" id="name"/>-->
+<!--    <br><br>-->
+<!--    <label for="lastname">Enter lastname:</label>-->
+<!--    <input type="text" th:field="*{lastName}" id="lastname"/>-->
+<!--    <br><br>-->
+<!--    <label for="Age">Enter age:</label>-->
+<!--    <input type="text" th:field="*{age}" id="Age"/>-->
+<!--    <br><br>-->
+<!--    <label for="password">Enter password:</label>-->
+<!--    <input type="text" th:field="*{password}" id="password"/>-->
+<!--    <br><br>-->
+<!--    <br><br>-->
+<!--    <label for="role">Enter role:</label>-->
+<!--    <input type="text" th:field="*{roleName}" id="role"/>-->
+<!--    <br><br>-->
+
+<!--    <input type="submit" value="Create">-->
+<!--    <br><br>-->
+
+<!--    <input type="button" value="Back to menu"-->
+<!--           onclick="window.location.href = '/'"/>-->
+<!--  </form>-->
+<!--</div>-->
