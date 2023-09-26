@@ -1,94 +1,62 @@
 package ru.kata.spring.boot_security.demo.configs;
 
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.filter.HiddenHttpMethodFilter;
-
-import javax.sql.DataSource;
-
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.kata.spring.boot_security.demo.services.UserDetailsServiceApp;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig {
-    private final SuccessUserHandler successUserHandler;
-    public WebSecurityConfig(SuccessUserHandler successUserHandler) {
-        this.successUserHandler = successUserHandler;
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final SuccessUserHandler userHandler;
+
+    private final UserDetailsServiceApp userDetailsServiceApp;
+
+    @Autowired
+    public WebSecurityConfig(SuccessUserHandler userHandler, UserDetailsServiceApp userDetailsServiceApp) {
+        this.userHandler = userHandler;
+        this.userDetailsServiceApp = userDetailsServiceApp;
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                // метод начинает конфигурирование правил авторизации для запросов.
-                .authorizeRequests()
-                .requestMatchers("/admin").hasRole("ADMIN")
-                .requestMatchers("/sort").hasAnyRole("ADMIN", "USER")
-                .anyRequest().authenticated()
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/auth/login", "/auth/registration", "/error").permitAll()
+                .anyRequest().hasAnyRole("USER","ADMIN")
                 .and()
-                .formLogin().successHandler(successUserHandler).permitAll()
+                .formLogin()
+//                .loginPage("/auth/login")
+                .usernameParameter("email")
+                .loginProcessingUrl("/process_login")
+                .successHandler(userHandler)
+                .failureUrl("/auth/login?error")
                 .and()
-                .logout(logOutPage -> logOutPage.logoutSuccessUrl("/").permitAll());
-        return http.build();
+                .logout().logoutUrl("/logout")
+                .logoutSuccessUrl("/auth/login");
     }
 
     @Bean
-    public UserDetailsService userDetailsService (DataSource dataSource) {
-        JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
-        userDetailsManager.setUsersByUsernameQuery("SELECT username, password, enabled FROM UserMan WHERE username = ?");
-        return userDetailsManager;
+    public PasswordEncoder getPasswordEncoder () {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
-        return new HiddenHttpMethodFilter();
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setPasswordEncoder(getPasswordEncoder());
+        authenticationProvider.setUserDetailsService(userDetailsServiceApp);
+        return authenticationProvider;
     }
 
-//    @Bean
-//    public FilterRegistrationBean<OpenEntityManagerInViewFilter> openEntityManagerInViewFilter() {
-//        FilterRegistrationBean<OpenEntityManagerInViewFilter> filterRegistrationBean = new FilterRegistrationBean<>();
-//        filterRegistrationBean.setFilter(new OpenEntityManagerInViewFilter());
-//        filterRegistrationBean.setName("openEntityManagerInViewFilter");
-//        return filterRegistrationBean;
-//    }
-// In-Memory
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user =
-//                User.withDefaultPasswordEncoder()
-//                        .username("user")
-//                        .password("user")
-//                        .roles("USER")
-//                        .build();
-//        UserDetails admin =
-//                User.withDefaultPasswordEncoder()
-//                        .username("admin")
-//                        .password("admin")
-//                        .roles("ADMIN")
-//                        .build();
-//        return new InMemoryUserDetailsManager(admin, user);
-//        return new InMemoryUserDetailsManager(admin);
-//    }
-//
-// dbc auth
-//    @Bean
-//    public JdbcUserDetailsManager jdbcUserDetailsManager (DataSource dataSource) {
-//        UserDetails admin =
-//            User.withDefaultPasswordEncoder()
-//                    .username("admin")
-//                    .password("admin")
-//                    .roles("ADMIN")
-//                    .build();
-//        JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
-//        if (users.userExists(admin.getUsername())) {
-//            users.deleteUser(admin.getUsername());
-//        }
-//        users.createUser(admin);
-//        return users;
-//    }
 }

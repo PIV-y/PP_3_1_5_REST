@@ -1,0 +1,17 @@
+.logoutLblPos{
+    position:fixed;
+    right:10px;
+    top:5px;
+}
+
+.height-nav-bar{
+    height: 40px;
+}
+
+.logout-color{
+    color: gray;
+}
+
+.btn-login {
+    width:100%
+}
