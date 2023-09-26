@@ -1,6 +1,8 @@
 package ru.kata.spring.boot_security.demo.services;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,7 +23,7 @@ import java.util.stream.Collectors;
 public class UserDetailsServiceApp implements UserDetailsService {
 
     private final UserRepository userRepository;
-
+    private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceApp.class);
     private final UserDAOImpl userDAO;
 
 
@@ -38,7 +40,7 @@ public class UserDetailsServiceApp implements UserDetailsService {
 //        User user = userDAO.findUserByEmail(username);
 //        System.out.println(user);
         User user = userRepository.findByEmail(username);
-        System.out.println(user);
+        log.info("Получение email в loadUserByUsername: " + username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found!");
         }
