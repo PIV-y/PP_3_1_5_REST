@@ -290,11 +290,13 @@
                                                 <select id="rolesNew" class="form-select"
                                                         name="roles"
                                                         multiple size="2">
-                                                    <option th:each="role: ${roles}"
+                                                    <option
+                                                            th:each="role: ${roles}"
                                                             th:text="${role.name}"
                                                             th:value="${role.id}">
                                                         <th:block th:text="${roles}">
                                                         </th:block>
+
                                                     </option>
                                                 </select>
                                             </div>
@@ -327,7 +329,10 @@
                             <td th:utext="${admin.lastName}">Last Name</td>
                             <td th:utext="${admin.age}">Age</td>
                             <td th:utext="${admin.email}">Email</td>
-                            <td th:utext="${admin.roles}">Role</td>
+                            <td>
+                                <span th:each="role : ${admin.getRoles()}" th:text="${role}"></span>
+                            </td>
+<!--                            <td th:utext="${admin.roles}">Role</td>-->
                         </tr>
                         </tbody>
                     </table>
