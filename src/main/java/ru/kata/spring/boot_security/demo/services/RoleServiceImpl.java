@@ -28,20 +28,12 @@ public class RoleServiceImpl implements RoleService{
     @Override
     @Transactional
     public List<Role> getList() {
-//        List<Role> roleList = roleDAO.getList();
-//        for (Role r : roleList) {
-//            r.setName(r.getName().substring(5));
-//        }
-//        return roleList;
         return roleDAO.getList();
     }
 
     @Override
     @Transactional
     public Role getRole(Integer id) {
-//        Role role = roleDAO.getRole(id);
-//        role.setName(role.getName().substring(5));
-//        return role;
         return roleDAO.getRole(id);
     }
 

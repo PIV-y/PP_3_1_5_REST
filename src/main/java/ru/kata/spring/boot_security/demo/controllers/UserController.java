@@ -15,7 +15,6 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService userService;
-
     private final UserRepository userRepository;
 
     @Autowired
@@ -24,14 +23,8 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/hello")
-    public String sayHello() {
-        return "hello";
-    }
-
     @GetMapping("/user")
     public String showUserInfo (Principal principal, Model model) {
-//        User user = userService.findByUsername(principal.getName());
         User user = userRepository.findByEmail(principal.getName());
         model.addAttribute("user",user);
         System.out.println(user);

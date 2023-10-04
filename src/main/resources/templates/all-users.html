@@ -71,7 +71,6 @@
                                     <td th:text="${user.getLastName()}">Last name</td>
                                     <td th:text="${user.getAge()}">Age</td>
                                     <td th:text="${user.getEmail()}">Email</td>
-<!--                                    <td th:text="${user.getRoles()}">Role</td>-->
                                     <td>
                                         <span th:each="role : ${user.getRoles()}" th:text="${role.toString()}"></span>
                                     </td>
@@ -240,7 +239,7 @@
                                                             Close
                                                         </button>
                                                         <form th:action="${'/admin/delete/' + user.id}"
-                                                              th:method="get">
+                                                              th:method="delete">
                                                             <button type="submit" class="btn btn-danger">Delete</button>
                                                         </form>
                                                     </div>

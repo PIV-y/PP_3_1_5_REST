@@ -21,4 +21,7 @@ public interface UserService {
     List<User> getList();
 
     User findByEmail(String userName);
+
+    void register(User user);
+
 }

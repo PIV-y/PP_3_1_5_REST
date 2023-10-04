@@ -42,13 +42,6 @@ public class UserDAOImpl implements UserDAO {
 
     @Transactional
     public User findUserByEmail(String email) {
-        System.out.println("Hello");
-//        return (User) entityManager.createQuery("from User where email=:email").setParameter().getSingleResult();
-//        return entityManager.createQuery("select xxx from User xxx join fetch xxx.roles where xxx.email = :email", User.class)
-//                .setParameter("email", email)
-//                .getResultList()
-//                .stream()
-//                .findAny().orElse(null);
         Query query = entityManager.createQuery("from User where email=:email", User.class);
         query.setParameter("email", email);
         return (User) query.getSingleResult();
