@@ -6,7 +6,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import ru.kata.spring.boot_security.demo.services.UserDetailsServiceApp;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +14,7 @@ import java.util.Set;
 
 @Component
 public class SuccessUserHandler implements AuthenticationSuccessHandler {
-    private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceApp.class);
+    private static final Logger log = LoggerFactory.getLogger(SuccessUserHandler.class);
 
     // Spring Security использует объект Authentication, пользователя авторизованной сессии.
     @Override

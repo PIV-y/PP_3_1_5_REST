@@ -37,15 +37,18 @@ public class UserDetailsServiceApp implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        User user = userDAO.findUserByEmail(username);
-//        System.out.println(user);
+        log.info("Email " + username + " зашло в loadUserByUsername");
         User user = userRepository.findByEmail(username);
         log.info("Получение email в loadUserByUsername: " + username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found!");
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+        log.info("Пользователь найден в БД...");
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 mapRolesToAuthorities(user.getRoles()));
+        log.info("формирование userDetails объекта...");
+        log.info("Инфо о userDetails объекте: " + userDetails.getAuthorities().toString());
+        return userDetails;
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {

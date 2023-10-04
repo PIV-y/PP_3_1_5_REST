@@ -1,6 +1,8 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,17 +11,20 @@ import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.AdminServiceImpl;
 import ru.kata.spring.boot_security.demo.services.RoleService;
+import ru.kata.spring.boot_security.demo.services.UserDetailsServiceApp;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
     private final AdminServiceImpl adminServiceImpl;
-
+    private static final Logger log = LoggerFactory.getLogger(AdminController.class);
     private final UserService userService;
 
     private final RoleService roleService;
@@ -61,6 +66,7 @@ public class AdminController {
     @PostMapping("/saveUser")
     public String saveUser (@ModelAttribute("user") User user) {
         adminServiceImpl.saveUser(user);
+        log.info("user пришедший в saveUser: " + user.toString());
         return "redirect:/admin/";
     }
 
@@ -73,6 +79,8 @@ public class AdminController {
 
     @PostMapping("/{id}")
     public String update(@ModelAttribute("user") User user, @PathVariable(value = "id") Long id) {
+        log.info("user на контроллере post update пришедший из вью: " + user.toString());
+        log.info("роль юзера на контроллере post update: " + user.getRoles().toString());
         adminServiceImpl.updateUser(id,user);
         return "redirect:/admin/";
     }

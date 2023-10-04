@@ -94,8 +94,8 @@ public class User implements UserDetails {
         this.username = username;
     }
 
-    public void setUsername(String email) {
-        this.username = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getLastName() {

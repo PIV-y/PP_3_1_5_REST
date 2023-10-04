@@ -28,8 +28,12 @@ public class RegistrationServiceImpl implements RegistrationService{
     public void register(User user) {
         Role role1 = roleRepository.findById(1L).get();
         Role role2 = roleRepository.findById(2L).get();
-        user.addRole(role1);
-        user.addRole(role2);
+
+        if (user.getOriginalUsername().equals("admin")) {
+            user.addRole(role1);
+        } else {
+            user.addRole(role2);
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
