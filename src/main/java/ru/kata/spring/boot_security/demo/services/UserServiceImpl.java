@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.UserDAO;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
@@ -21,14 +20,12 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final UserDAO userDAO;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserDAO userDAO, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.userDAO = userDAO;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -80,12 +77,12 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public List<User> getList() {
-        return userDAO.getList();
+        return userRepository.findAll();
     }
 
     @Override
     public User findByEmail(String userName) {
-        return userDAO.findByEmail(userName);
+        return userRepository.findByEmail(userName);
     }
 
     @Override
@@ -102,5 +99,4 @@ public class UserServiceImpl implements UserService{
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
-
 }

@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.UserDAOImpl;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
@@ -24,14 +23,10 @@ public class UserDetailsServiceApp implements UserDetailsService {
 
     private final UserRepository userRepository;
     private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceApp.class);
-    private final UserDAOImpl userDAO;
-
-
 
     @Autowired
-    public UserDetailsServiceApp(UserRepository userRepository, UserDAOImpl userDAO) {
+    public UserDetailsServiceApp(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.userDAO = userDAO;
     }
 
     @Override

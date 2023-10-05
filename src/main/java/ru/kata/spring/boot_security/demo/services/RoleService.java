@@ -9,11 +9,9 @@ public interface RoleService {
 
     List<Role> getList();
 
-    Role getRole(Integer id);
+    Role getRole(Long id);
 
-    void deleteRole(Integer id);
+    void deleteRole(Long id);
 
     void editRole(Role role);
-
-    List<Role> listByRole(List<String> name);
 }

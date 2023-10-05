@@ -3,55 +3,48 @@ package ru.kata.spring.boot_security.demo.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.RoleDAO;
 import ru.kata.spring.boot_security.demo.models.Role;
+import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 
 import java.util.List;
 
 @Component
 public class RoleServiceImpl implements RoleService{
-    private final RoleDAO roleDAO;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public RoleServiceImpl(RoleDAO roleDAO) {
-        this.roleDAO = roleDAO;
+    public RoleServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
-
 
     @Override
     @Transactional
     public boolean add(Role role) {
-        roleDAO.add(role);
+        roleRepository.save(role);
         return true;
     }
 
     @Override
     @Transactional
     public List<Role> getList() {
-        return roleDAO.getList();
+        return roleRepository.findAll();
     }
 
     @Override
     @Transactional
-    public Role getRole(Integer id) {
-        return roleDAO.getRole(id);
+    public Role getRole(Long id) {
+        return roleRepository.getById(id);
     }
 
     @Override
     @Transactional
-    public void deleteRole(Integer id) {
-        roleDAO.deleteRole(id);
+    public void deleteRole(Long id) {
+        roleRepository.deleteById(id);
     }
 
     @Override
     @Transactional
     public void editRole(Role role) {
-        roleDAO.editRole(role);
-    }
-
-    @Override
-    @Transactional
-    public List<Role> listByRole(List<String> name) {
-        return roleDAO.listByName(name);
+        roleRepository.save(role);
     }
 }
